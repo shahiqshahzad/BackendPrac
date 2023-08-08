@@ -10,6 +10,11 @@ const authUser = asyncHanlder(async (req, res) => {
     const pickError = errors[0];
     throw new Error(`${pickError.path} ${pickError.msg}`);
   } else {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      res.status(500);
+      throw new Error("User Already Exists");
+    }
     const user = await User.create({
       firstName: "shahiqs",
       lastName: "shaikh",
@@ -32,4 +37,27 @@ const authUser = asyncHanlder(async (req, res) => {
     }
   }
 });
-export { authUser };
+
+const authRegister = asyncHanlder(async (req, res) => {
+  const { firstName, lastName, email, password } = req.body;
+  const { errors } = validationResult(req);
+  if (errors.length !== 0) {
+    const pickError = errors[0];
+    throw new Error(`${pickError.path} ${pickError.msg}`);
+  } else {
+    const checkUser = await User.findOne({ email });
+    if (checkUser) {
+      res.status(401);
+      throw new Error("User already exists");
+    }
+    const registerUser = new User({
+      firstName,
+      lastName,
+      email,
+      password,
+    });
+    await registerUser.save();
+    res.send("success");
+  }
+});
+export { authUser, authRegister };

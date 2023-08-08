@@ -1,6 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
-import { authUser } from "../controllers/userController.js";
+import { authRegister, authUser } from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -12,8 +12,17 @@ router.get("/", (req, res) => {
 router.post(
   "/login",
   body("email").isEmail(),
-  body("name").notEmpty(),
+  body("password").notEmpty(),
   authUser
+);
+
+router.post(
+  "/register",
+  body("firstName").notEmpty(),
+  body("lastName").notEmpty(),
+  body("email").isEmail(),
+  body("password").notEmpty(),
+  authRegister
 );
 
 export default router;

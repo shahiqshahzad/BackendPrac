@@ -1,9 +1,13 @@
 import express from "express";
-import { accountAuth } from "../controllers/authController.js";
-import jwt from "jsonwebtoken";
-import authVerification from "../middleware/auth.js";
+import {
+  accountAuth,
+  getProfile,
+  updateProfile,
+} from "../controllers/authController.js";
 
 const router = express.Router();
 router.get("/account", accountAuth);
+router.get("/getProfile/:id", getProfile);
+router.post("/updateProfile/:id", updateProfile);
 
 export default router;
