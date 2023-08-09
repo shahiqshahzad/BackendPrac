@@ -1,5 +1,8 @@
+import User from "../model/UserModel.js";
+
 const accountAuth = (req, res) => {
-  res.send("this is accountAuth");
+  const { email, ...resttd } = req.body;
+  console.log(resttd);
 };
 
 export { accountAuth };

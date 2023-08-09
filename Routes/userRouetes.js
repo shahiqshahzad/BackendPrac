@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 router.post(
   "/login",
   body("email").isEmail(),
-  body("name").notEmpty(),
+  body("password").notEmpty(),
   authUser
 );
 

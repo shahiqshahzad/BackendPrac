@@ -4,6 +4,6 @@ import jwt from "jsonwebtoken";
 import authVerification from "../middleware/auth.js";
 
 const router = express.Router();
-router.get("/account", accountAuth);
+router.post("/account", accountAuth);
 
 export default router;
