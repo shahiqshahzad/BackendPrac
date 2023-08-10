@@ -1,6 +1,10 @@
 import express from "express";
 import { body } from "express-validator";
-import { authRegister, authUser } from "../controllers/userController.js";
+import {
+  authRegister,
+  authUser,
+  verifyUser,
+} from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -24,5 +28,7 @@ router.post(
   body("password").notEmpty(),
   authRegister
 );
+
+router.get("register/:token", verifyUser);
 
 export default router;

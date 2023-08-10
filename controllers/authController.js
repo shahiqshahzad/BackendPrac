@@ -3,6 +3,8 @@ import User from "../model/UserModel.js";
 import mongoose from "mongoose";
 
 const accountAuth = (req, res) => {
+  const id = req.userData;
+  console.log(id);
   res.send("this is accountAuth");
 };
 const getProfile = asyncHanlder(async (req, res) => {

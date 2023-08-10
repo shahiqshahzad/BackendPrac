@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import User from "../model/UserModel.js";
 import generatorToken from "../utils/tokenGenrator.js";
 import asyncHanlder from "express-async-handler";
+import sendConfirmationEmail from "../utils/emailVerification.js";
 
 const authUser = asyncHanlder(async (req, res) => {
   const { email } = req.body;
@@ -10,17 +11,7 @@ const authUser = asyncHanlder(async (req, res) => {
     const pickError = errors[0];
     throw new Error(`${pickError.path} ${pickError.msg}`);
   } else {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      res.status(500);
-      throw new Error("User Already Exists");
-    }
-    const user = await User.create({
-      firstName: "shahiqs",
-      lastName: "shaikh",
-      email,
-      password: "Password@1",
-    });
+    const user = await User.findOne({ email });
     if (user) {
       res.status(201).json({
         _id: user._id,
@@ -57,7 +48,17 @@ const authRegister = asyncHanlder(async (req, res) => {
       password,
     });
     await registerUser.save();
-    res.send("success");
+    await sendConfirmationEmail(email, generatorToken(registerUser._id));
+    await registerUser.save();
+
+    res.status(201);
+    res.send("Successfully Registered");
   }
 });
-export { authUser, authRegister };
+
+const verifyUser = asyncHanlder(async (req, res) => {
+  const { token } = req.params;
+  console.log(token);
+});
+
+export { authUser, authRegister, verifyUser };
