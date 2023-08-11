@@ -12,6 +12,7 @@ connectDB();
 const port = 4000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoutes);
 app.use("/auth", authVerification, authRoutes);

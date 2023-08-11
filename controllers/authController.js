@@ -20,6 +20,9 @@ const getProfile = asyncHanlder(async (req, res) => {
 });
 
 const updateProfile = asyncHanlder(async (req, res) => {
-  res.send("update profile");
+  const { email, ...rest } = req.body;
+  console.log(rest);
+  res.send("hy");
 });
+
 export { accountAuth, getProfile, updateProfile };

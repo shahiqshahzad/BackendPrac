@@ -29,6 +29,6 @@ router.post(
   authRegister
 );
 
-router.get("register/:token", verifyUser);
+router.get("/verify/:token", verifyUser);
 
 export default router;
