@@ -68,6 +68,9 @@ const verifyUser = asyncHanlder(async (req, res) => {
       if (err) {
         res.status(404).send("Invalid Token");
       } else {
+        const checkUser = await User.findOne({ _id: decode["id"] });
+        if (checkUser.isVerified)
+          res.status(404).send("User already Verified please try to login");
         await User.findOneAndUpdate(
           { _id: decode.id },
           { isVerified: true },

@@ -2,11 +2,6 @@ import asyncHanlder from "express-async-handler";
 import User from "../model/UserModel.js";
 import mongoose from "mongoose";
 
-const accountAuth = (req, res) => {
-  const id = req.userData;
-  console.log(id);
-  res.send("this is accountAuth");
-};
 const getProfile = asyncHanlder(async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("invalid id");
@@ -21,8 +16,24 @@ const getProfile = asyncHanlder(async (req, res) => {
 
 const updateProfile = asyncHanlder(async (req, res) => {
   const { email, ...rest } = req.body;
-  console.log(rest);
-  res.send("hy");
+  let documents = undefined;
+  if (req.file) {
+    const { originalname, filename, path } = req.file;
+    documents = path;
+  }
+  const updatedData = {
+    ...rest,
+  };
+  if (documents !== undefined) {
+    updatedData.documents = documents;
+  }
+
+  const result = await User.findOneAndUpdate(
+    { _id: req.userData._id },
+    { $set: updatedData },
+    { new: true }
+  ).select("-password");
+  res.json(result);
 });
 
-export { accountAuth, getProfile, updateProfile };
+export { getProfile, updateProfile };
