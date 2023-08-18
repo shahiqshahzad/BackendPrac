@@ -4,7 +4,12 @@ import generatorToken from "../utils/tokenGenrator.js";
 import asyncHanlder from "express-async-handler";
 import sendConfirmationEmail from "../utils/emailVerification.js";
 import jwt from "jsonwebtoken";
+import { matchPassword } from "../utils/utils.js";
+import bcrypt from "bcryptjs";
 
+// @desc Auth user & get token
+// @route Post/api/users/login
+// @access Public
 const authUser = asyncHanlder(async (req, res) => {
   const { email, password } = req.body;
   const { errors } = validationResult(req);
@@ -13,7 +18,7 @@ const authUser = asyncHanlder(async (req, res) => {
     throw new Error(`${pickError.path} ${pickError.msg}`);
   } else {
     const user = await User.findOne({ email });
-    if (user && password === user.password) {
+    if (user && matchPassword(user.password, password)) {
       if (user.isVerified === false) {
         res.status(401);
         throw new Error("User not verify");
@@ -50,7 +55,7 @@ const authRegister = asyncHanlder(async (req, res) => {
       firstName,
       lastName,
       email,
-      password,
+      password: bcrypt.hashSync(password, 10),
     });
     await registerUser.save();
     await sendConfirmationEmail(email, generatorToken(registerUser._id));

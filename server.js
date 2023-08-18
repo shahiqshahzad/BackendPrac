@@ -1,9 +1,10 @@
 import express from "express";
 import userRoutes from "./Routes/userRouetes.js";
 import authRoutes from "./Routes/authRoutes.js";
+import adminRoutes from "./Routes/adminRoutes.js";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
-import authVerification from "./middleware/auth.js";
+import { adminVerification, authVerification } from "./middleware/auth.js";
 
 const app = express();
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoutes);
 app.use("/auth", authVerification, authRoutes);
+app.use("/admin", authVerification, adminVerification, adminRoutes);
 
 app.use((req, res, next) => {
   const error = new Error(`Not found ${req.originalUrl}`);

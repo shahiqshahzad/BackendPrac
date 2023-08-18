@@ -34,4 +34,12 @@ const authVerification = (req, res, next) => {
   });
 };
 
-export default authVerification;
+const adminVerification = (req, res, next) => {
+  if (req.userData.isAdmin) {
+    return next();
+  }
+  res.status(403);
+  throw new Error("Access Denied");
+};
+
+export { authVerification, adminVerification };
