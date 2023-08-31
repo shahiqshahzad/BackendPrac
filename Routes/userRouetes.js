@@ -8,11 +8,6 @@ import {
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.status(403);
-  throw new Error("Invalid Email and Message");
-});
-
 router.post(
   "/login",
   body("email").isEmail(),

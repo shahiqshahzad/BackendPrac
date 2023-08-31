@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoutes);
 app.use("/auth", authVerification, authRoutes);
+app.use("/product", authVerification);
 app.use("/admin", authVerification, adminVerification, adminRoutes);
 
 app.use((req, res, next) => {
