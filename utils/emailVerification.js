@@ -6,12 +6,12 @@ async function sendConfirmationEmail(email, token) {
       host: "smtp.ethereal.email",
       port: 587,
       auth: {
-        user: "davion86@ethereal.email",
-        pass: "TNruZMeZEg2Wt3Vrxy",
+        user: "coty.boyer32@ethereal.email",
+        pass: "mMygHSbGBcszkmaJwN",
       },
     });
     const mailOptions = {
-      from: "davion86@ethereal.email",
+      from: "coty.boyer32@ethereal.email",
       to: email,
       subject: "Confirm Your Email",
       html: `<p>Click the following link to confirm your email:</p>

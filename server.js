@@ -2,6 +2,7 @@ import express from "express";
 import userRoutes from "./Routes/userRouetes.js";
 import authRoutes from "./Routes/authRoutes.js";
 import adminRoutes from "./Routes/adminRoutes.js";
+import productRoutes from "./Routes/productRoutes.js";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
 import { adminVerification, authVerification } from "./middleware/auth.js";
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoutes);
 app.use("/auth", authVerification, authRoutes);
+app.use("/product", productRoutes);
 app.use("/admin", authVerification, adminVerification, adminRoutes);
 
 app.use((req, res, next) => {
