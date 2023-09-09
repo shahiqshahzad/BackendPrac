@@ -1,6 +1,5 @@
 import asyncHanlder from "express-async-handler";
 import Product from "../model/ProductModel.js";
-import { validationResult } from "express-validator";
 
 // @desc Get products & get {page and limit} from query params with pagination
 // @route Get/api/product
@@ -15,32 +14,7 @@ const getProducts = asyncHanlder(async (req, res) => {
   res.json(product);
 });
 
-// @desc Add product
-// @route Post/api/product
-// @acess private admin only
 const addProduct = asyncHanlder(async (req, res) => {
-  const { name, description, price, stock } = req.body;
-  const { errors } = validationResult(req);
-  if (errors.length !== 0) {
-    const pickError = errors[0];
-    throw new Error(`${pickError.path} ${pickError.msg}`);
-  }
-  if (req.file) {
-    const { orignalname, filename, path } = req.file;
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
-    const product = new Product({
-      name,
-      description,
-      price,
-      stock,
-      productImage: `${baseUrl}/${path}`,
-      adminPost: req.userData._id,
-    });
-    await product.save();
-    res.send("product Add Successfully");
-  } else {
-    throw new Error("please add Image");
-  }
+  res.send("hy");
 });
-
 export { getProducts, addProduct };

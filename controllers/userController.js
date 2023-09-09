@@ -15,6 +15,7 @@ const authUser = asyncHanlder(async (req, res) => {
   const { errors } = validationResult(req);
   if (errors.length !== 0) {
     const pickError = errors[0];
+    res.status(401);
     throw new Error(`${pickError.path} ${pickError.msg}`);
   } else {
     const user = await User.findOne({ email });
