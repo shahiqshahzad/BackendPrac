@@ -19,7 +19,10 @@ const authUser = asyncHanlder(async (req, res) => {
     throw new Error(`${pickError.path} ${pickError.msg}`);
   } else {
     const user = await User.findOne({ email });
-    if (user && matchPassword(user.password, password)) {
+    console.log(await matchPassword(user.password, password));
+    console.log(password);
+    console.log(user.password);
+    if (user && (await matchPassword(user.password, password))) {
       if (user.isVerified === false) {
         res.status(401);
         throw new Error("User not verify");
