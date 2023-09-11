@@ -3,6 +3,7 @@ import { body } from "express-validator";
 import {
   authRegister,
   authUser,
+  forgetPassword,
   verifyUser,
 } from "../controllers/userController.js";
 
@@ -25,5 +26,10 @@ router.post(
 );
 
 router.get("/verify/:token", verifyUser);
+router.post(
+  "/forgetPassword",
+  body("email").notEmpty().isEmail(),
+  forgetPassword
+);
 
 export default router;

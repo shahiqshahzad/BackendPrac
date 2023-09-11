@@ -1,7 +1,7 @@
 import express from "express";
-import { addProduct } from "../controllers/productController.js";
 import { body } from "express-validator";
 import { upload } from "../utils/upload.js";
+import { addProduct } from "../controllers/productController.js";
 
 const router = express.Router();
 router.post(

@@ -1,8 +1,10 @@
 import asyncHanlder from "express-async-handler";
 import Product from "../model/ProductModel.js";
+import { validationResult } from "express-validator";
+import User from "../model/UserModel.js";
 
 // @desc Get products & get {page and limit} from query params with pagination
-// @route Get/api/product
+// @route Get/product
 // @access Public
 const getProducts = asyncHanlder(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -14,7 +16,42 @@ const getProducts = asyncHanlder(async (req, res) => {
   res.json(product);
 });
 
-const addProduct = asyncHanlder(async (req, res) => {
-  res.send("hy");
+// @desc Product detail and get id from params
+// @route Get/product/productId
+// @access Public
+const productDetail = asyncHanlder(async (req, res) => {
+  const { id } = req.params;
+  const findOne = await Product.findById(id).populate(
+    "adminPost",
+    "firstName email lastName profileImage"
+  );
+  console.log(findOne);
+  res.send(id);
 });
-export { getProducts, addProduct };
+
+const addProduct = asyncHanlder(async (req, res) => {
+  const { name, description, price, stock } = req.body;
+  const { errors } = validationResult(req);
+  if (errors.length !== 0) {
+    const pickError = errors[0];
+    throw new Error(`${pickError.path} ${pickError.msg}`);
+  } else {
+    const checkUser = await User.findById(req.userData._id);
+    if (!checkUser) {
+      throw new Error("Admin not found");
+    }
+    const baseUrl = `${req.protocol}://${req.get("host")}/${req.file.path}`;
+    const addProduct = new Product({
+      name,
+      description,
+      price,
+      stock,
+      adminPost: checkUser._id,
+      productImage: baseUrl,
+    });
+    await addProduct.save();
+    res.status(201);
+    res.send("Product successfully added");
+  }
+});
+export { getProducts, productDetail, addProduct };

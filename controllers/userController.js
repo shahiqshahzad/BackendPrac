@@ -19,9 +19,6 @@ const authUser = asyncHanlder(async (req, res) => {
     throw new Error(`${pickError.path} ${pickError.msg}`);
   } else {
     const user = await User.findOne({ email });
-    console.log(await matchPassword(user.password, password));
-    console.log(password);
-    console.log(user.password);
     if (user && (await matchPassword(user.password, password))) {
       if (user.isVerified === false) {
         res.status(401);
@@ -95,4 +92,20 @@ const verifyUser = asyncHanlder(async (req, res) => {
   }
 });
 
-export { authUser, authRegister, verifyUser };
+const forgetPassword = asyncHanlder(async (req, res) => {
+  const { email } = req.body;
+  const { errors } = validationResult(req);
+  if (errors.length !== 0) {
+    const pickError = errors[0];
+    throw new Error(`${pickError.path} ${pickError.msg}`);
+  }
+  const findUser = await User.findOne({ email });
+  if (findUser) {
+    res.send("Please check your email ");
+  } else {
+    res.status(400);
+    throw new Error("User not exists");
+  }
+});
+
+export { authUser, authRegister, verifyUser, forgetPassword };
