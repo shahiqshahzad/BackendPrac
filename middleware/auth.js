@@ -1,16 +1,15 @@
 import jwt from "jsonwebtoken";
 import User from "../model/UserModel.js";
+import asyncHanlder from "express-async-handler";
 
-const authVerification = (req, res, next) => {
+const authVerification = asyncHanlder((req, res, next) => {
   const authHeader = req.headers["token"];
   if (authHeader === undefined) {
-    res.status(400);
-    throw new Error("Authorization token is required ");
+    return res.status(400).send({ message: "Authorization token is required" });
   }
   jwt.verify(authHeader, "test", async (err, decode) => {
     if (err) {
-      res.status(404);
-      throw new Error("Invalid token");
+      return res.status(400).send({ message: "Invalid token" });
     } else {
       const { id } = decode;
       const user = await User.findOne({ _id: id }).select("-password").exec();
@@ -32,7 +31,7 @@ const authVerification = (req, res, next) => {
       }
     }
   });
-};
+});
 
 const adminVerification = (req, res, next) => {
   if (req.userData.isAdmin) {
