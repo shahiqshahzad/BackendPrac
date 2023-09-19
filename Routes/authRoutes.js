@@ -1,6 +1,11 @@
 import express from "express";
 import multer from "multer";
-import { getProfile, updateProfile } from "../controllers/authController.js";
+import {
+  changePassword,
+  getProfile,
+  updateProfile,
+} from "../controllers/authController.js";
+import { body } from "express-validator";
 
 const router = express.Router();
 
@@ -15,7 +20,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("/getProfile/:id", getProfile);
+router.get("/getProfile", getProfile);
 router.post("/updateProfile", upload.single("file"), updateProfile);
-
+router.post(
+  "/changepassword",
+  body("password").notEmpty(),
+  body("newpassword").notEmpty(),
+  changePassword
+);
 export default router;

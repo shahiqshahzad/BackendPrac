@@ -13,17 +13,9 @@ const userSchema = mongoose.Schema(
     lastName: { type: String },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    isAdmin: { type: Boolean, required: true, default: false },
-    accountType: {
-      type: String,
-      enum: ["accounting", "banking", "itsoftware", "marketing"],
-    },
+    isAdmin: { type: Number, required: true, default: 1 },
     profileInfo: { type: String },
     profileImage: { type: String },
-    languages: { type: [String], default: [] },
-    location: { type: String },
-    documents: { type: [String], default: [] },
-    socialMedia: socialMediaLinks,
     isVerified: { type: Boolean, required: true, default: false },
   },
   {

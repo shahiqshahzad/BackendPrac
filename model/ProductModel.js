@@ -21,6 +21,11 @@ const productSchema = mongoose.Schema(
     adminPost: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+    productImage: {
+      type: String,
+      required: true,
     },
   },
   {

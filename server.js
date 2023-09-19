@@ -5,6 +5,9 @@ import adminRoutes from "./Routes/adminRoutes.js";
 import productRoutes from "./Routes/productRoutes.js";
 import connectDB from "./config/db.js";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import cors from "cors";
 import { adminVerification, authVerification } from "./middleware/auth.js";
 
 const app = express();
@@ -13,8 +16,14 @@ connectDB();
 
 const port = 4000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadFolderPath = path.join(__dirname, "uploads");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(uploadFolderPath));
+app.use(cors());
 
 app.use("/user", userRoutes);
 app.use("/auth", authVerification, authRoutes);
