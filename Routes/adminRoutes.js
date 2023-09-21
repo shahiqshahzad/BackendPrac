@@ -1,7 +1,11 @@
 import express from "express";
 import { body } from "express-validator";
-import { upload } from "../utils/upload.js";
-import { addCategory, addProduct } from "../controllers/productController.js";
+import { upload, uploadCategory } from "../utils/upload.js";
+import {
+  addCategory,
+  addProduct,
+  getCateogries,
+} from "../controllers/productController.js";
 
 const router = express.Router();
 router.post(
@@ -12,14 +16,16 @@ router.post(
     body("description").notEmpty(),
     body("price").notEmpty().isFloat(),
     body("stock").notEmpty().isInt(),
+    body("categoryId").notEmpty().isMongoId(),
   ],
   addProduct
 );
 router.post(
   "/addCategory",
-  upload.single("file"),
+  uploadCategory.single("file"),
   [body("name").notEmpty()],
   addCategory
 );
+router.get("/getCategories", getCateogries);
 
 export default router;
