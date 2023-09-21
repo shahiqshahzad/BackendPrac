@@ -8,7 +8,7 @@ const categorySchema = mongoose.Schema(
       unique: true,
       trim: true,
     },
-    adminPost: {
+    adminPostCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -27,5 +27,5 @@ const categorySchema = mongoose.Schema(
   }
 );
 
-const Category = mongoose.model("category", categorySchema);
+const Category = mongoose.model("Category", categorySchema);
 export default Category;

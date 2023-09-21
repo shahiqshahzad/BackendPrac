@@ -34,11 +34,19 @@ const authVerification = asyncHanlder((req, res, next) => {
 });
 
 const adminVerification = (req, res, next) => {
-  if (req.userData.isAdmin) {
+  if (req.userData.isAdmin == 2 || req.userData.isAdmin === 3) {
     return next();
   }
   res.status(403);
   throw new Error("Access Denied");
 };
 
-export { authVerification, adminVerification };
+const superAdminVerification = (req, res, next) => {
+  if (req.userData.isAdmin == 2 || req.userData.isAdmin === 3) {
+    return next();
+  }
+  res.status(403);
+  throw new Error("Access Denied");
+};
+
+export { authVerification, adminVerification, superAdminVerification };
