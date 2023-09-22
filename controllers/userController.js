@@ -134,9 +134,9 @@ const updateUser = asyncHanlder(async (req, res) => {
     new: true,
   }).select("-password");
   if (!findUser) {
-    res.json({ message: "Invalid User " });
+    throw new Error("Invalid User");
   }
-  res.send(findUser);
+  res.json({ message: "Successfully updated " });
 });
 
 export {
