@@ -4,7 +4,29 @@ import mongoose from "mongoose";
 import { validationResult } from "express-validator";
 import { matchPassword } from "../utils/utils.js";
 import bcrypt from "bcryptjs";
+import passport from "passport";
+import { OAuth2Strategy } from "passport-google-oauth";
 
+passport.use(
+  new OAuth2Strategy(
+    {
+      clientID:
+        "555526637291-2o767o0pb2lchfnvt4mn6a2gt1eerf0q.apps.googleusercontent.com",
+      clientSecret: "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",
+      callbackURL: "http://localhost:4000/auth/google/callback",
+    },
+    function (accessToken, refreshToken, profile, done) {
+      console.log(profile);
+      return done(null, profile);
+    }
+  )
+);
+passport.serializeUser(function (User, done) {
+  done(null, User);
+});
+passport.deserializeUser(function (User, done) {
+  done(null, User);
+});
 const getProfile = asyncHanlder(async (req, res) => {
   const id = req.userData._id;
   if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("invalid id");
@@ -57,4 +79,21 @@ const changePassword = asyncHanlder(async (req, res) => {
   }
 });
 
-export { getProfile, updateProfile, changePassword };
+const googleAuth = asyncHanlder(async (req, res) => {
+  passport.authenticate("google", {
+    scope: ["https://www.googleapis.com/auth/plus.login"],
+  })(req, res);
+});
+
+const googleCallBack = asyncHanlder(async (req, res) => {
+  console.log(req.user);
+  res.send("finish");
+});
+
+export {
+  getProfile,
+  updateProfile,
+  changePassword,
+  googleAuth,
+  googleCallBack,
+};

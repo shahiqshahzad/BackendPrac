@@ -3,6 +3,8 @@ import multer from "multer";
 import {
   changePassword,
   getProfile,
+  googleAuth,
+  googleCallBack,
   updateProfile,
 } from "../controllers/authController.js";
 import { body } from "express-validator";
@@ -28,4 +30,6 @@ router.post(
   body("newpassword").notEmpty(),
   changePassword
 );
+router.get("/google", googleAuth);
+router.get("/google/callback", googleCallBack);
 export default router;

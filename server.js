@@ -14,6 +14,7 @@ import {
   authVerification,
   superAdminVerification,
 } from "./middleware/auth.js";
+import passport from "passport";
 
 const app = express();
 dotenv.config();
@@ -29,9 +30,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(uploadFolderPath));
 app.use(cors());
+app.use(passport.initialize());
 
 app.use("/user", userRoutes);
-app.use("/auth", authVerification, authRoutes);
+// app.use("/auth", authVerification, authRoutes);
+app.use("/auth", authRoutes);
 app.use("/product", productRoutes);
 app.use("/admin", authVerification, adminVerification, adminRoutes);
 app.use(
