@@ -27,5 +27,4 @@ router.post(
   addCategory
 );
 router.get("/getCategories", getCateogries);
-
 export default router;

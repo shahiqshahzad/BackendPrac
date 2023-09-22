@@ -108,4 +108,43 @@ const forgetPassword = asyncHanlder(async (req, res) => {
   }
 });
 
-export { authUser, authRegister, verifyUser, forgetPassword };
+// desc Get users
+// @route Get /superadmin/getUsers
+// @access SuperAdmin Access
+const getUsers = asyncHanlder(async (req, res) => {
+  const users = await User.find().select("-password");
+  res.status(200);
+  res.json(users);
+});
+
+const deleteUser = asyncHanlder(async (req, res) => {
+  const { id } = req.params;
+  const findUser = await User.findByIdAndDelete(id);
+  if (findUser) {
+    res.json({ message: "User deleted Successfully" });
+  } else {
+    res.status(400);
+    throw new Error("Invalid User id ");
+  }
+});
+
+const updateUser = asyncHanlder(async (req, res) => {
+  const { id } = req.params;
+  const findUser = await User.findByIdAndUpdate(id, req.body, {
+    new: true,
+  }).select("-password");
+  if (!findUser) {
+    res.json({ message: "Invalid User " });
+  }
+  res.send(findUser);
+});
+
+export {
+  authUser,
+  authRegister,
+  verifyUser,
+  forgetPassword,
+  getUsers,
+  deleteUser,
+  updateUser,
+};

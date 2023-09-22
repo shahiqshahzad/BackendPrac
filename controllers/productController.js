@@ -103,7 +103,6 @@ const getCateogries = asyncHanlder(async (req, res) => {
 });
 const verifyCategory = asyncHanlder(async (req, res) => {
   const { categoryId } = req.body;
-  console.log(categoryId);
   const { errors } = validationResult(req);
   if (errors.length !== 0) {
     const pickError = errors[0];
@@ -117,12 +116,32 @@ const verifyCategory = asyncHanlder(async (req, res) => {
     );
 
     if (!updatedCategory) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "Category not found" });
     }
     res.status(201);
     res.json({ message: "Category verified Successfully" });
   }
 });
+
+const verifyProduct = asyncHanlder(async (req, res) => {
+  const { productId } = req.body;
+  const { errors } = validationResult(req);
+  if (errors.length !== 0) {
+    const pickError = errors[0];
+    throw new Error(`${pickError.path} ${pickError.msg}`);
+  } else {
+    const updateProduct = await Product.findOneAndUpdate(
+      { _id: productId },
+      { isActive: true }
+    );
+    if (!updateProduct) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(201);
+    res.json({ message: "Product verified Successfully" });
+  }
+});
+
 export {
   getProducts,
   productDetail,
@@ -130,4 +149,5 @@ export {
   addCategory,
   getCateogries,
   verifyCategory,
+  verifyProduct,
 };

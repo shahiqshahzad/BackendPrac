@@ -14,6 +14,10 @@ const productSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
     stock: {
       type: Number,
       required: true,
