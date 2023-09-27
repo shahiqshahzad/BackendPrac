@@ -1,12 +1,5 @@
 import mongoose from "mongoose";
 
-const socialMediaLinks = mongoose.Schema({
-  faceBook: String,
-  youtube: String,
-  instagram: String,
-  twitter: String,
-});
-
 const userSchema = mongoose.Schema(
   {
     firstName: { type: String, required: true },

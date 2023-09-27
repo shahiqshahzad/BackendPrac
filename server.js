@@ -15,23 +15,30 @@ import {
   superAdminVerification,
 } from "./middleware/auth.js";
 import passport from "passport";
-
+import session from "express-session";
 const app = express();
 dotenv.config();
 connectDB();
 
 const port = 4000;
-
+app.use(
+  session({
+    secret: "testt",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadFolderPath = path.join(__dirname, "uploads");
+
+app.use(passport.session());
+app.use(passport.initialize());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(uploadFolderPath));
 app.use(cors());
-app.use(passport.initialize());
-
 app.use("/user", userRoutes);
 // app.use("/auth", authVerification, authRoutes);
 app.use("/auth", authRoutes);

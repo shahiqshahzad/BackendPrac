@@ -15,18 +15,13 @@ passport.use(
       clientSecret: "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",
       callbackURL: "http://localhost:4000/auth/google/callback",
     },
-    function (accessToken, refreshToken, profile, done) {
+    (accessToken, refreshToken, profile, done) => {
       console.log(profile);
       return done(null, profile);
     }
   )
 );
-passport.serializeUser(function (User, done) {
-  done(null, User);
-});
-passport.deserializeUser(function (User, done) {
-  done(null, User);
-});
+
 const getProfile = asyncHanlder(async (req, res) => {
   const id = req.userData._id;
   if (!mongoose.Types.ObjectId.isValid(id)) throw new Error("invalid id");
@@ -38,7 +33,6 @@ const getProfile = asyncHanlder(async (req, res) => {
     throw new Error("Invalid User");
   }
 });
-
 const updateProfile = asyncHanlder(async (req, res) => {
   const { email, ...rest } = req.body;
   let documents = undefined;
@@ -81,19 +75,8 @@ const changePassword = asyncHanlder(async (req, res) => {
 
 const googleAuth = asyncHanlder(async (req, res) => {
   passport.authenticate("google", {
-    scope: ["https://www.googleapis.com/auth/plus.login"],
+    scope: ["profile", "email"],
   })(req, res);
 });
 
-const googleCallBack = asyncHanlder(async (req, res) => {
-  console.log(req.user);
-  res.send("finish");
-});
-
-export {
-  getProfile,
-  updateProfile,
-  changePassword,
-  googleAuth,
-  googleCallBack,
-};
+export { getProfile, updateProfile, changePassword, googleAuth };

@@ -4,10 +4,10 @@ import {
   changePassword,
   getProfile,
   googleAuth,
-  googleCallBack,
   updateProfile,
 } from "../controllers/authController.js";
 import { body } from "express-validator";
+import passport from "passport";
 
 const router = express.Router();
 
@@ -31,5 +31,12 @@ router.post(
   changePassword
 );
 router.get("/google", googleAuth);
-router.get("/google/callback", googleCallBack);
+router.get(
+  "/google/callback",
+  passport.authenticate(
+    "google",
+    { failureRedirect: "/login" },
+    function (req, res) {}
+  )
+);
 export default router;
