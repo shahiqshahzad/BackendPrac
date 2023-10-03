@@ -34,14 +34,15 @@ const uploadFolderPath = path.join(__dirname, "uploads");
 
 app.use(passport.session());
 app.use(passport.initialize());
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(uploadFolderPath));
-app.use(cors());
+
 app.use("/user", userRoutes);
-// app.use("/auth", authVerification, authRoutes);
-app.use("/auth", authRoutes);
+app.use("/auth", authVerification, authRoutes);
+// app.use("/auth", authRoutes);
 app.use("/product", productRoutes);
 app.use("/admin", authVerification, adminVerification, adminRoutes);
 app.use(

@@ -30,12 +30,20 @@ const getProducts = asyncHanlder(async (req, res) => {
 // @access Public
 const productDetail = asyncHanlder(async (req, res) => {
   const { id } = req.params;
-  const findOne = await Product.findById(id).populate(
-    "adminPost",
-    "firstName email lastName profileImage"
-  );
-  console.log(findOne);
-  res.send(id);
+  const productDetail = await Product.findById(id)
+    .populate("adminPost", "firstName email lastName profileImage")
+    .populate({
+      path: "categoryId",
+      populate: {
+        path: "adminPostCategory",
+        select: "id firstName lastName email",
+      },
+    });
+  if (productDetail) {
+    res.json(productDetail);
+  } else {
+    throw new Error("Invalid product Id");
+  }
 });
 
 const addProduct = asyncHanlder(async (req, res) => {
@@ -142,6 +150,18 @@ const verifyProduct = asyncHanlder(async (req, res) => {
   }
 });
 
+const updateProduct = asyncHanlder(async (req, res) => {
+  const { productId } = req.params;
+  const findProduct = await Product.findByIdAndUpdate(productId, req.body, {
+    new: true,
+  });
+  if (findProduct) {
+    res.json({ message: "Successfully updated" });
+  } else {
+    throw new Error("Product not found");
+  }
+});
+
 export {
   getProducts,
   productDetail,
@@ -150,4 +170,5 @@ export {
   getCateogries,
   verifyCategory,
   verifyProduct,
+  updateProduct,
 };

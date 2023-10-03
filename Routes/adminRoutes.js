@@ -5,6 +5,7 @@ import {
   addCategory,
   addProduct,
   getCateogries,
+  updateProduct,
 } from "../controllers/productController.js";
 
 const router = express.Router();
@@ -26,5 +27,6 @@ router.post(
   [body("name").notEmpty()],
   addCategory
 );
+router.post("/updateProduct/:productId", updateProduct);
 router.get("/getCategories", getCateogries);
 export default router;

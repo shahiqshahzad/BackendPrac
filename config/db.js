@@ -11,4 +11,3 @@ const connectDB = async () => {
 };
 
 export default connectDB;
-// MONGO_URL = mongodb+srv://admin:admin@cluster.tqtzrnn.mongodb.net/
