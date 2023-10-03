@@ -152,11 +152,14 @@ const verifyProduct = asyncHanlder(async (req, res) => {
 
 const updateProduct = asyncHanlder(async (req, res) => {
   const { productId } = req.params;
-  const findProduct = await Product.findByIdAndUpdate(productId, req.body, {
+  const updatedData = req.body;
+  updatedData.isActive = false;
+  const findProduct = await Product.findByIdAndUpdate(productId, updatedData, {
     new: true,
   });
   if (findProduct) {
     res.json({ message: "Successfully updated" });
+    console.log(findProduct);
   } else {
     throw new Error("Product not found");
   }
