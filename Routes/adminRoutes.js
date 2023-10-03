@@ -1,6 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
-import { upload, uploadCategory } from "../utils/upload.js";
+import { upload } from "../utils/upload.js";
 import {
   addCategory,
   addProduct,
@@ -23,7 +23,7 @@ router.post(
 );
 router.post(
   "/addCategory",
-  uploadCategory.single("file"),
+  upload.single("file"),
   [body("name").notEmpty()],
   addCategory
 );

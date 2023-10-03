@@ -23,6 +23,7 @@ const authVerification = asyncHanlder((req, res, next) => {
           isVerified: user.isVerified,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
+          profileImage: user?.profileImage,
         };
         next();
       } else {

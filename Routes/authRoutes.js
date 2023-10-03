@@ -9,18 +9,14 @@ import {
 import { body } from "express-validator";
 import passport from "passport";
 
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "../config/firebaseConfig.js";
+
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: (req, file, cd) => {
-    cd(null, "uploads");
-  },
-  filename: (req, file, cd) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cd(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
+initializeApp(firebaseConfig);
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.get("/getProfile", getProfile);
 router.post("/updateProfile", upload.single("file"), updateProfile);

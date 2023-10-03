@@ -6,6 +6,13 @@ import { matchPassword } from "../utils/utils.js";
 import bcrypt from "bcryptjs";
 import passport from "passport";
 import { OAuth2Strategy } from "passport-google-oauth";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 passport.use(
   new OAuth2Strategy(
@@ -35,17 +42,33 @@ const getProfile = asyncHanlder(async (req, res) => {
 });
 const updateProfile = asyncHanlder(async (req, res) => {
   const { email, ...rest } = req.body;
-  let documents = undefined;
-  if (req.file) {
-    const { originalname, filename, path } = req.file;
-    const baseUrl = `${req.protocol}://${req.get("host")}/${path}`;
-    documents = baseUrl;
-  }
+  const storage = getStorage();
+  const uploadedFile = req.file;
+
   const updatedData = {
     ...rest,
   };
-  if (documents !== undefined) {
-    updatedData.documents = documents;
+  if (req.file) {
+    if (req.userData.profileImage) {
+      const storageRefDe = ref(storage, req.userData.profileImage);
+      deleteObject(storageRefDe)
+        .then(() => {
+          console.log("Previous file deleted successfully");
+        })
+        .catch((error) => {
+          console.error("Error deleting previous file:", error);
+        });
+    }
+    const storageRef = ref(
+      storage,
+      "profile_images/" + uploadedFile.originalname
+    );
+    const uploadTask = await uploadBytesResumable(
+      storageRef,
+      uploadedFile.buffer
+    );
+    const getProfileImage = await getDownloadURL(uploadTask.ref);
+    updatedData.profileImage = getProfileImage;
   }
 
   const result = await User.findOneAndUpdate(

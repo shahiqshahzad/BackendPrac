@@ -4,6 +4,15 @@ import { validationResult } from "express-validator";
 import User from "../model/UserModel.js";
 import Category from "../model/CategoryModel.js";
 import { populate } from "dotenv";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "../config/firebaseConfig.js";
+initializeApp(firebaseConfig);
 
 // @desc Get products & get {page and limit} from query params with pagination
 // @route Get/product
@@ -61,14 +70,25 @@ const addProduct = asyncHanlder(async (req, res) => {
       throw new Error("Please add product image file");
     }
 
-    const baseUrl = `${req.protocol}://${req.get("host")}/${req.file.path}`;
+    const storage = getStorage();
+    const uploadedFile = req.file;
+
+    const storageRef = ref(
+      storage,
+      "product_images/" + uploadedFile.originalname
+    );
+    const uploadProductImage = await uploadBytesResumable(
+      storageRef,
+      uploadedFile.buffer
+    );
+    const getProfileImage = await getDownloadURL(uploadProductImage.ref);
     const addProduct = new Product({
       name,
       description,
       price,
       stock,
       adminPost: checkUser._id,
-      productImage: baseUrl,
+      productImage: getProfileImage,
       categoryId: categoryId,
     });
     await addProduct.save();
