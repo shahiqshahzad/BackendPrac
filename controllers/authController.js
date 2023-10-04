@@ -86,11 +86,12 @@ const changePassword = asyncHanlder(async (req, res) => {
     throw new Error(`${pickError.path} ${pickError.msg}`);
   }
   const findUser = await User.findOne({ email: req.userData.email });
+  console.log(findUser);
   if (await matchPassword(findUser.password, password)) {
     findUser.password = bcrypt.hashSync(newpassword, 10);
     await findUser.save();
     res.status(200);
-    res.send("Successfully updated");
+    res.send({ message: "Successfully updated" });
   } else {
     throw new Error("Invalid Password");
   }

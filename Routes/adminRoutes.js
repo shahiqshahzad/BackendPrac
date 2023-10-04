@@ -5,6 +5,7 @@ import {
   addCategory,
   addProduct,
   getCateogries,
+  removeCategory,
   updateProduct,
 } from "../controllers/productController.js";
 
@@ -29,4 +30,6 @@ router.post(
 );
 router.post("/updateProduct/:productId", updateProduct);
 router.get("/getCategories", getCateogries);
+router.delete("/removeCateogry/:categoryId", removeCategory);
+
 export default router;

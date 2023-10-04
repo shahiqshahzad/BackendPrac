@@ -113,11 +113,18 @@ const addCategory = asyncHanlder(async (req, res) => {
       res.status(404);
       throw new Error("Please add category Image");
     }
-    const baseUrl = `${req.protocol}://${req.get("host")}/${req.file.path}`;
+    const storage = getStorage();
+    const uploadedFile = req.file;
+    const storageRef = ref(storage, "category/" + uploadedFile.originalname);
+    const uploadCategoryImage = await uploadBytesResumable(
+      storageRef,
+      uploadedFile.buffer
+    );
+    const getProfileImage = await getDownloadURL(uploadCategoryImage.ref);
     const addCategory = new Category({
       name,
       adminPostCategory: req.userData._id,
-      categoryImage: baseUrl,
+      categoryImage: getProfileImage,
     });
     await addCategory.save();
     res.status(201);
@@ -150,6 +157,14 @@ const verifyCategory = asyncHanlder(async (req, res) => {
     res.json({ message: "Category verified Successfully" });
   }
 });
+const removeCategory = asyncHanlder(async (req, res) => {
+  const { categoryId } = req.params;
+  const findCategory = await Category.findById(categoryId);
+  if (findCategory) {
+  } else {
+    throw new Error("Invalid Category Id");
+  }
+});
 
 const verifyProduct = asyncHanlder(async (req, res) => {
   const { productId } = req.body;
@@ -179,7 +194,6 @@ const updateProduct = asyncHanlder(async (req, res) => {
   });
   if (findProduct) {
     res.json({ message: "Successfully updated" });
-    console.log(findProduct);
   } else {
     throw new Error("Product not found");
   }
@@ -194,4 +208,5 @@ export {
   verifyCategory,
   verifyProduct,
   updateProduct,
+  removeCategory,
 };
