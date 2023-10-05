@@ -5,6 +5,7 @@ import User from "../model/UserModel.js";
 import Category from "../model/CategoryModel.js";
 import { populate } from "dotenv";
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
   ref,
@@ -159,8 +160,12 @@ const verifyCategory = asyncHanlder(async (req, res) => {
 });
 const removeCategory = asyncHanlder(async (req, res) => {
   const { categoryId } = req.params;
-  const findCategory = await Category.findById(categoryId);
+  const findCategory = await Category.findByIdAndDelete(categoryId);
   if (findCategory) {
+    const storage = getStorage();
+    const storageRefDe = ref(storage, findCategory.categoryImage);
+    await deleteObject(storageRefDe);
+    res.send({ message: "Category Delete Successfully" });
   } else {
     throw new Error("Invalid Category Id");
   }
